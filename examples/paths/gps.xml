@@ -26,7 +26,7 @@
 				<real i="4" def="0" unit="°">longitude</real><!-- longitude with unit ° -->
 				<text i="6" def="None">fix</text> <!-- Type of GPS fix if any -->
 			</store>
-			<return/>
+			<return/> <!-- Don't try the other if's, stop here -->
 		</if>
 		<!-- Check if it's a GPVTG -->
 		<if start="$GPVTG">
