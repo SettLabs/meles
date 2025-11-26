@@ -8,6 +8,7 @@ import org.apache.commons.lang3.math.NumberUtils;
 import org.eclipse.paho.client.mqttv3.*;
 import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
 import org.tinylog.Logger;
+import util.LookAndFeel;
 import util.data.vals.*;
 import util.tools.TimeTools;
 import worker.Datagram;
@@ -72,9 +73,13 @@ public class MqttWorker implements MqttCallbackExtended,Writable {
 		this.publishService = publishService;
 	}
 
-	private void submitConnector(int attempt) {
+	private void submitConnector(int attempt, int seconds) {
         connecting = true;
-		eventLoopGroup.submit(new Connector(attempt));
+        if( seconds==0 ) {
+            eventLoopGroup.submit(new Connector(attempt));
+        }else{
+            eventLoopGroup.schedule(new Connector(attempt),seconds,TimeUnit.SECONDS);
+        }
 	}
 
 	private void submitPublisher() {
@@ -126,11 +131,11 @@ public class MqttWorker implements MqttCallbackExtended,Writable {
 		}
 		mqttQueue.add(work);
 		if (!client.isConnected()) { // If not connected, try to connect
-			if (!connecting) {
-				submitConnector(0);
+            if (!connecting) {
+				submitConnector(0,0);
 			}
 		} else if (!publishing) { // If currently not publishing ( there's a 30s timeout) enable publishing
-			submitPublisher();
+            submitPublisher();
 		}
 	}
 	public void addWork(String topic, String value){
@@ -157,7 +162,7 @@ public class MqttWorker implements MqttCallbackExtended,Writable {
 			client.setTimeToWait(10000);
 			client.setCallback(this);
 			if( !subscriptions.isEmpty() ){ // If we have subscriptions, connect.
-				submitConnector(0);
+				submitConnector(0,0);
 			}
 		} catch (MqttException e) {
 			Logger.error(id+"(mqtt) -> "+e);
@@ -272,7 +277,7 @@ public class MqttWorker implements MqttCallbackExtended,Writable {
 			return 2;
 		if (!client.isConnected() ) { // If not connected, try to connect
 			if( !connecting ){
-				submitConnector(0);
+				submitConnector(0,0);
 			}
 		} else{
 			try {
@@ -479,7 +484,7 @@ public class MqttWorker implements MqttCallbackExtended,Writable {
 	public void connectionLost(Throwable cause) {
 		if (!mqttQueue.isEmpty() && !subscriptions.isEmpty()) {
 			Logger.info( id+"(mqtt) -> Connection lost but still work to do, reconnecting...");
-			submitConnector(0);
+			submitConnector(0,0);
 		}else{
 			connecting=false;
 			Logger.warn( id+"(mqtt) -> "+cause.getMessage() + "->" + cause);
@@ -531,12 +536,37 @@ public class MqttWorker implements MqttCallbackExtended,Writable {
                 Logger.info(id + "(mqtt) -> Connected");
             } catch (MqttException me) {
                 attempt++;
-                var time = Math.min(attempt * 25 + 25, 120);
-                Logger.warn(id + "(mqtt) -> Failed to connect,  trying again in " + time + "s. Cause: " + me.getMessage());
-				submitConnector(attempt);
+                var time = Math.min(getBackoffDelay(attempt),3000); // Exponential till it reaches 5 minutes
+
+                purgeExpiredMessages();
+                if( !mqttQueue.isEmpty() || !subscriptions.isEmpty() ) {
+                    Logger.warn(id + "(mqtt) -> Failed to connect because: " + me.getMessage() + ",  trying again in "
+                            + TimeTools.convertPeriodToString(time,TimeUnit.SECONDS) + ".");
+                    submitConnector(attempt, time);
+                }else{
+                    Logger.warn(id + "(mqtt) -> Failed to connect (cause:"+me.getMessage()+"), not trying again because empty work queue and no subscriptions." );
+                }
 			}
 		}
 	}
+    private int getBackoffDelay(int attempts) {
+        // Implement exponential backoff
+        return (int) Math.pow(2, attempts);
+    }
+    private void purgeExpiredMessages(){
+        if( mqttQueue.isEmpty())
+            return;
+
+        mqttQueue.removeIf(work -> {
+            if (work.isExpired()) {
+                work.getOrigin().ifPresent(ori -> ori.writeLine("mqtt", "expired"));
+                return true;
+            }
+            return false;
+        });
+        if(mqttQueue.isEmpty())
+            Logger.info(id+" -> Work queue of broker after purge.");
+    }
 	/* ***************************************** P U B L I S H  ******************************************************/
 	private class Publisher implements Runnable {
 		@Override
@@ -552,7 +582,12 @@ public class MqttWorker implements MqttCallbackExtended,Writable {
 					}
 					if( work.isInvalid())
 						continue;
+                    if( work.isExpired() ){
+                        work.getOrigin().ifPresent( ori->ori.writeLine("mqtt","expired") );
+                        continue;
+                    }
 					client.publish( work.getTopic(), work.getMessage() );
+                    work.getOrigin().ifPresent( ori->ori.writeLine("mqtt","published") );
 				} catch (InterruptedException e) {
 					Logger.error(e);
 					// Restore interrupted state...
@@ -560,8 +595,12 @@ public class MqttWorker implements MqttCallbackExtended,Writable {
 				} catch (MqttException e) {
 					Logger.error(e.getMessage());
 					goOn=false;
-					work.incrementAttempt();
-					mqttQueue.add(work);
+					if( work.incrementAttempt() ) {
+                        work.getOrigin().ifPresent(ori->ori.writeLine("mqtt", "retrying") );
+                        mqttQueue.add(work);
+                    }else{
+                        work.getOrigin().ifPresent(ori->ori.writeLine("mqtt", "stopped") );
+                    }
 				} 
 			}
 			publishing=false;
@@ -590,4 +629,15 @@ public class MqttWorker implements MqttCallbackExtended,Writable {
 		return true;
 	}
 
+    public void giveObject(String info, Object object){
+        if( info.equals("pub") ){
+            if( object instanceof MqttWork work ){
+                addWork(work);
+            }else{
+                Logger.error(id()+ "(MQTT) -> Received object isn't MQTT work");
+            }
+        }else{
+            Logger.error(id()+ "(MQTT) -> Unknown info received "+info);
+        }
+    }
 }

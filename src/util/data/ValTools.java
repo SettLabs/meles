@@ -9,6 +9,7 @@ import util.tools.TimeTools;
 
 import java.util.ArrayList;
 import java.util.Objects;
+import java.util.Random;
 import java.util.regex.MatchResult;
 import java.util.regex.Pattern;
 
@@ -176,6 +177,14 @@ public class ValTools {
                     if (!r.isEmpty())
                         line = line.replace("{" + p[0] + ":" + p[1] + "}", r);
                 }
+                case "rand","random" -> {
+                    var max = NumberUtils.createInteger(p[1]);
+                    if( max!=null ){
+                        var random = new Random();
+                        var roll = String.valueOf(random.nextInt(1, max+1));
+                        line = line.replace("{" + p[0] + ":" + p[1] + "}", roll);
+                    }
+                }
             }
         }
         var lower = line.toLowerCase();
@@ -185,7 +194,6 @@ public class ValTools {
         }
         return line;
     }
-
     private static String replaceTime(String ref, String line, Rtvals rtvals) {
         return switch(ref){
             case "ref" -> line.replace("{utc}", TimeTools.formatLongUTCNow());

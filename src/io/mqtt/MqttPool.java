@@ -156,7 +156,7 @@ public class MqttPool implements Commandable {
             return doNoArgCmds(args[0], d.getWritable(), d.asHtml());
         if (args[0].equalsIgnoreCase("addbroker"))
             return doAddCmd(args);
-        return doArgCmds(d.cmd(), args);
+        return doArgCmds(d.cmd(), args, d.getWritable() );
     }
     private String doNoArgCmds( String cmd, Writable wr, boolean html ){
         return switch (cmd) {
@@ -194,12 +194,13 @@ public class MqttPool implements Commandable {
                 .add("mqtt:brokerid,unsubscribe,topic -> Unsubscribe from a topic on given broker")
                 .add("mqtt:brokerid,unsubscribe,all -> Unsubscribe from all topics on given broker");
         help.add("Rtvals")
-                .add("mqtt:brokerid,provide,rtval<,topic> -> Provide a certain rtval to the broker, topic is group/name by default.")
+               // .add("mqtt:brokerid,provide,rtval<,topic> -> Provide a certain rtval to the broker, topic is group/name by default.")
                 .add("mqtt:brokerid,store,type,topic<,rtval> -> Store a certain topic as a rtval, if no rtval is specified topic is used as rtval id")
                 .add("mqtt:brokerid,stores " +"-> Get info on all the active sub to val links")
                 .add("mqtt:brokerid,generate,topic -> Generate store entries based on received messages after subscribing to topic.");
         help.add("Send & Receive")
                 .add("mqtt:id -> Forwards the data received from the given broker to the issuing writable")
+                .add("mqtt:id,wr -> Get the writable of this broker as an object (internal use only)")
                 .add("mqtt:id,send,topic:value -> Sends the value to the topic of the brokerid");
         return LookAndFeel.formatHelpCmd(help.toString(), html);
     }
@@ -217,7 +218,7 @@ public class MqttPool implements Commandable {
         readFromXML(); // reload
         return "Broker added";
     }
-    private String doArgCmds( String cmd, String[] args ){
+    private String doArgCmds( String cmd, String[] args, Writable wr ){
         var worker = mqttWorkers.get(args[0]);
         if( worker == null)
             return "! Not a valid id: "+args[0];
@@ -248,6 +249,14 @@ public class MqttPool implements Commandable {
                 var deb = Tools.parseBool(args[2],false);
                 worker.setDebug(deb);
                 yield "Changing debug to "+(deb?"enabled":"disabled");
+            }
+            case "wr" -> {
+                if( wr == null ){
+                    Logger.error("mqtt -> No valid writable provided to receive writable from "+worker.id() );
+                    yield "! Invalid writable";
+                }
+                wr.giveObject("writable",worker.getWritable());
+                yield "Writable given";
             }
             default -> {
                 Logger.error("(mqtt) -> No such command "+ cmd + ": " + args[0]);
@@ -285,8 +294,12 @@ public class MqttPool implements Commandable {
             return "! No proper topic:value given, got " + args[2] + " instead.";
 
         String[] topVal = args[2].split(":");
-        double val = rtvals.getReal(topVal[1], -999);
-        worker.addWork(topVal[0], String.valueOf(val));
+        var opt = rtvals.getBaseVal(topVal[1]);
+        opt.ifPresent(baseVal -> worker.addWork( MqttWork.toTopic(topVal[0]).data(baseVal)));
+        if( opt.isEmpty() ) {
+            worker.addWork( MqttWork.toTopic(topVal[0]).data(topVal[1]) );
+            return "No such rtval, assumed direct data.";
+        }
         return "Data send to " + args[0];
     }
     private String doProvideCmd( String[] args, XMLfab fab ){

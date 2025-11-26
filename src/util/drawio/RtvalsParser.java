@@ -188,7 +188,13 @@ public class RtvalsParser {
         for (var cell : starters) {
             var label = cell.getParam("arrowlabel", "update");
             var target = cell.getArrowTarget(label);
+            if(target==null)
+                target = cell.getArrowTarget("next");
 
+            if(target == null) {
+                Logger.warn("Update block without a correct arrow, wanted "+label);
+                continue;
+            }
             var res = buildValCel(target, label, tools, vals);
             if (res == null) {
                 Logger.error("Failed to make val");
@@ -219,7 +225,7 @@ public class RtvalsParser {
         int scale = 6;
 
         // Do everything up to the rtval
-        while (valcell == null) {
+        while (valcell == null && target!=null) {
             switch (target.type) {
                 case "realval", "integerval" -> {
                     for (var vc : vals) {

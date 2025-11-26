@@ -1,16 +1,63 @@
 package io.mqtt;
 
+import io.Writable;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.tinylog.Logger;
+import util.data.vals.BaseVal;
+
+import java.time.Duration;
+import java.time.Instant;
+import java.time.temporal.Temporal;
+import java.time.temporal.TemporalUnit;
+import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 
 public class MqttWork {
-	String topic;
-	int qos=0;
-	int attempt = 0;
-	boolean valid=true;
-	byte[] data;
 
-	/**
+    private Instant createdAt = Instant.now();
+    private Duration ttl = Duration.ZERO; // configurable
+
+    private String topic;
+    private int qos=0;
+    private int attempt = 0;
+    private int maxAttempts=5;
+    private boolean valid=true;
+    private byte[] data;
+    private Writable origin;
+
+    public MqttWork(String topic){
+        this.topic=topic;
+    }
+    public static MqttWork toTopic(String topic){
+        return new MqttWork(topic);
+    }
+    public MqttWork topic( String topic ){
+        this.topic=topic;
+        return this;
+    }
+    public MqttWork data( String data ){
+        this.data=data.getBytes();
+        return this;
+    }
+    public MqttWork data( BaseVal val ){
+        this.data=val.asString().getBytes();
+        return this;
+    }
+    public MqttWork inform( Writable wr){
+        this.origin=wr;
+        return this;
+    }
+    public MqttWork expiresAfter(int count, TemporalUnit unit){
+        if( count != 0)
+            ttl = Duration.of(count,unit);
+        return this;
+    }
+    public boolean isExpired(){
+        if( ttl.isZero() )
+            return false;
+        return Duration.between(createdAt, Instant.now()).compareTo(ttl) > 0;
+    }
+    /**
 	 * Constructor that also adds a value 
 	 * @param group The group this data is coming from
 	 * @param parameter The parameter to update
@@ -21,29 +68,41 @@ public class MqttWork {
 		setValue(value);
 	}
 	public MqttWork( String topic, Object value) {
-		int index = topic.indexOf("/");
-		if( index == -1 ){
-			Logger.error( "No topic given in mqttwork: "+topic);
-			valid=false;
-		}else{
-			this.topic=topic;
+        if( checkTopic(topic) )
 			setValue(value);
-		}
-		
 	}
+
+    public MqttWork( String topic, byte[] value, Writable origin){
+        if( checkTopic(topic) ){
+            this.origin=origin;
+            data=value;
+        }
+    }
+    private boolean checkTopic( String topic ){
+        if( !topic.contains("/")){
+            Logger.error( "No topic given in mqttwork: "+topic+ "(missing / )");
+            valid=false;
+            return false;
+        }
+            this.topic=topic;
+        return true;
+    }
+    public Optional<Writable> getOrigin(){
+        return Optional.ofNullable(origin);
+    }
 	private void setValue( Object val){
-		if (val.getClass().equals(Double.class)) {
-			data = Double.toString((double)val).getBytes();
-		} else if (val.getClass().equals(Integer.class)) {
-			data = Integer.toString((int)val).getBytes();
-		} else if (val.getClass().equals(Boolean.class)) {
-			data = Boolean.toString((boolean)val).getBytes();
-		} else if (val.getClass().equals(String.class)) {
-			data = ((String)val).getBytes();
-		}else{
-			Logger.error("mqtt -> Invalid class given, topic:"+topic);
-			valid=false;
-		}
+        if (val instanceof Double d) {
+            data = Double.toString(d).getBytes();
+        } else if (val instanceof Integer i) {
+            data = Integer.toString(i).getBytes();
+        } else if (val instanceof Boolean b ) {
+            data = Boolean.toString(b).getBytes();
+        } else if (val instanceof String s) {
+            data = s.getBytes();
+        }else{
+            Logger.error("mqtt -> Invalid class given, topic:"+topic);
+            valid=false;
+        }
 	}
 	public String toString(){
 		return "Topic: "+topic+" -> data:"+new String(data) +" -> qos: "+qos;
@@ -74,7 +133,8 @@ public class MqttWork {
 		this.qos=qos;
 		return this;
 	}
-	public void incrementAttempt() {
+	public boolean incrementAttempt() {
 		attempt++;
-	}
+        return attempt < maxAttempts;
+    }
 }

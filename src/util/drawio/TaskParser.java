@@ -12,6 +12,7 @@ import util.data.vals.Rtvals;
 import util.evalcore.MathFab;
 import util.evalcore.ParseTools;
 import util.tasks.blocks.*;
+import util.tools.TimeTools;
 import util.tools.Tools;
 import worker.Datagram;
 
@@ -90,6 +91,7 @@ public class TaskParser {
             case "triggergateblock" -> doTriggerGateBlock(cell, tools, id);
             case "intervalblock" -> doIntervalBlock(cell, tools, id);
             case "mathblock" -> doMathBlock(cell, tools, id);
+            case "mqttblock" -> doMqttBlock( cell, tools, id);
             case "originblock" -> doOriginBlock(cell);
             case "readerblock" -> doReaderBlock(cell, tools, id);
             case "splitblock" -> doSplitBlock(cell, tools, id);
@@ -518,6 +520,52 @@ public class TaskParser {
         mb.id(blockId);
         addNext(cell, mb, tools, "next", "pass", "yes", "ok");
 
+        return mb;
+    }
+    private static MqttBlock doMqttBlock(Drawio.DrawioCell cell, TaskTools tools, String id) {
+        var blockId = alterId(id);
+        Logger.info(blockId + " -> Processing MQTT Block: " + blockId);
+
+        var brokerId = cell.getParam("brokerid", "");
+        if (!cell.hasParam("brokerid")) {
+            Logger.error(blockId + " -> No broker specified for mqttblock, or still empty");
+            return null;
+        }
+        var topic = cell.getParam("topic", "");
+        if( topic.isEmpty() || brokerId.isEmpty() ){
+            Logger.error("No broker id or topic provided for mqttblock "+cell.melesId);
+            return null;
+        }
+
+        var rtval = cell.getParam("rtval", "");
+
+        MqttBlock mb;
+        if( rtval.isEmpty() ){
+            var val = cell.getParam("data", "");
+            if( val.isEmpty() ){
+                Logger.error(blockId+" -> No rtval/data filled in");
+                return null;
+            }
+            mb = new MqttBlock(brokerId,topic, val );
+        }else{
+            var valOpt = tools.rtvals.getBaseVal(rtval);
+            if( valOpt.isEmpty() ){
+                Logger.error(blockId+" -> No val associated with "+rtval);
+                return null;
+            }
+            mb = new MqttBlock(brokerId,topic, valOpt.get());
+        }
+        if( cell.hasParam("expiretime") ){
+            var exp = cell.getParam("expiretime","0s");
+            if( !exp.equals("0s") ){
+                var ms = TimeTools.parsePeriodStringToMillis(exp);
+                mb.setExpireTime( ms );
+            }
+        }
+        mb.setEventLoop( tools.eventLoop() );
+        mb.id(blockId);
+        addNext(cell, mb, tools, "next", "pass", "yes", "ok");
+        addAlt(cell, mb, tools, "timeout","no retries","fail");
         return mb;
     }
 
