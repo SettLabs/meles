@@ -182,12 +182,13 @@ public class Rtvals implements Commandable {
     }
 
     /* *********************************** T E X T S  ************************************************************* */
-    public void addTextVal(TextVal tv) {
+    public TextVal addTextVal(TextVal tv) {
         if (tv == null) {
-            Logger.error("Invalid IntegerVal received, won't try adding it");
-            return;
+            Logger.error("Invalid TextVal received, won't try adding it");
+            return null;
         }
         textVals.putIfAbsent(tv.id(), tv);
+        return textVals.get(tv.id());
     }
 
     public boolean hasText(String id) {

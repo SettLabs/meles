@@ -194,7 +194,14 @@ public class ValStoreFab {
                     }
                 }
                 case "ignore" -> localRtvals.add(null);
-                case "text" -> ValFab.buildTextVal(val, groupID).ifPresent(x -> localRtvals.set(pos, x));
+                case "text" -> {
+                    var tv = ValFab.buildTextVal(val, groupID);
+                    if(tv.isPresent()){
+                        localRtvals.set(pos, rtvals.addTextVal(tv.get()));
+                    }else{
+                        Logger.error("store -> Failed to read text from xml");
+                    }
+                }
                 case "macro" -> {
                     Logger.warn("Val of type macro ignored");
                     localRtvals.add(null);
