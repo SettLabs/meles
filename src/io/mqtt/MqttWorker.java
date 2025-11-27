@@ -376,7 +376,7 @@ public class MqttWorker implements MqttCallbackExtended,Writable {
 				subsRecStamp.set(a,Instant.now().toEpochMilli());
 		}
         if (!targets.isEmpty())
-            targets.removeIf(dt -> !dt.writeLine(id, load));
+            targets.removeIf(dt -> !dt.writeLine(id, topic+":"+load));
 
 		// Process the message
 		var rtval = valReceived.get(topic);
