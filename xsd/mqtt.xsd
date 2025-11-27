@@ -19,6 +19,22 @@
                             <xs:element name="address" type="mqttAddress"  />
                             <xs:element name="clientid" type="nonEmptyString" minOccurs="0" />
                             <xs:element name="defaulttopic" type="nonEmptyString"  />
+                            <xs:element name="subscribe" type="nonEmptyString"  />
+                            <xs:element name="store" >
+                                <xs:complexType>
+                                    <xs:sequence>
+                                        <xs:element name="group" type="nonEmptyString" maxOccurs="unbounded" >
+                                            <xs:complexType>
+                                                <xs:all>
+
+                                                </xs:all>
+                                                <xs:attribute name="id" type="nonEmptyString"  />
+                                            </xs:complexType>
+                                        </xs:element>
+                                    </xs:sequence>
+                                    <xs:attribute name="generate" type="nonEmptyString" />
+                                </xs:complexType>
+                            </xs:element>
                             <xs:element name="subscriptions" >
                                 <xs:complexType>
                                     <xs:sequence>

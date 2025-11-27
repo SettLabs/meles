@@ -19,6 +19,8 @@
                 <xs:element name="timestamp" type="columnType"/>
                 <xs:element name="epoch" type="columnType"/>
                 <xs:element name="epochmillis" type="columnType"/>
+                <xs:element name="utcnow" type="columnType"/>
+                <xs:element name="localnow" type="columnType"/>
             </xs:choice>
         </xs:sequence>
         <xs:attribute name="name" type="nonEmptyString" use="required"/>

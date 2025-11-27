@@ -12,8 +12,9 @@
                 <xs:element name="path" minOccurs="0" maxOccurs="unbounded">
                     <xs:complexType>
                         <xs:attribute name="id" type="nonEmptyString" use="required"/>
-                        <xs:attribute name="import" type="nonEmptyString" use="required"/>
-                        <xs:attribute name="src" type="key_colon_value" use="required"/>
+                        <xs:attribute name="import" type="nonEmptyString" />
+                        <xs:attribute name="delimiter" type="nonEmptyString" />
+                        <xs:attribute name="src" type="key_colon_value" />
                     </xs:complexType>
                 </xs:element>
             </xs:sequence>

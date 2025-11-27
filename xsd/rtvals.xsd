@@ -4,8 +4,6 @@
     <xs:include schemaLocation="types.xsd"/>
 
     <!-- Types only used here -->
-
-
     <xs:element name="rtvals">
         <xs:complexType>
             <xs:sequence>
