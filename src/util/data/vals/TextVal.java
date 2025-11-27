@@ -1,5 +1,7 @@
 package util.data.vals;
 
+import util.tools.TimeTools;
+
 public class TextVal extends BaseVal {
     String value, defValue;
 
@@ -34,7 +36,11 @@ public class TextVal extends BaseVal {
         return this;
     }
     public String value() {
-        return value;
+        return switch(type){
+            case LOCALDT -> TimeTools.formatLongNow();
+            case UTCDT -> TimeTools.formatLongUTCNow();
+            default -> value;
+        };
     }
 
     public TextVal(String group, String name, String unit) {
@@ -57,7 +63,7 @@ public class TextVal extends BaseVal {
     }
 
     public String asString() {
-        return value;
+        return value();
     }
 
     @Override
@@ -66,6 +72,6 @@ public class TextVal extends BaseVal {
     }
 
     public String formatValueWithUnit() {
-        return value + unit;
+        return value() + unit;
     }
 }
