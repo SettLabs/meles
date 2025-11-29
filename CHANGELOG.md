@@ -20,7 +20,17 @@ Note: Version numbering: x.y.z
   - mqtt (partial)
 
 ### MQTT
-- Breaking, changed subscribe node to subscriptions node with topic subnodes.
+- Fixed: Data stream can now be stopped in telnet.
+- Moved code to MQTTv5
+- Enabled the use of properties:
+  - 'Datatype' is added by default and based on the used rtval.
+  - A timestamp can be added.
+  - The unit of the rtval can be added.
+  - Broker level config in xml to disable the use of properties.
+- Added option for subscriptions node with topic subnodes instead of subscribe in root.
+- Requestable stream didn't include topic info, current format <topic>:<value>
+- General cleanup of the code, should fix more bugs than it introduces.
+- Other modules can now request the writable. Allows directly publishing a topic.
 
 ### Drawio (Still experimental)
 - Global changes/additions
@@ -58,6 +68,16 @@ nothing is changed.
   - Added `retrigger` property to `delayblock`, options are restart,cancel,ignore.
 - Added referring to numericalvals (real,integer,boolean) in log blocks {group_name}
 - Emailblock now is an actual block instead of wrapped command block and the 'next' is triggered only if the email is send.
+- MQTT block
+  - Triggering this causes a publish to be done. Either a rtval or a fixed value. 
+  - Has a parameter 'expiretime' to define how long attempts of sending it can be done
+before giving up.
+- Rtvalsblocks
+  - No longer require a conditionblock to start a sequence after an rtval update (code inserts a dummy).
+  - A post update sequence is now actually after an update was done (it's part of the update sequence in code
+just the user could put it afterwards but then calls to the val being updated, returned the old value)
+  - Consecutive conditionblocks after a rtvalblock now all can use new/old as long as no other block besides
+logblock is inbetween.
 
 ### Database Manager
 - Added option to refer to a flag to determine if inserts are allow in a table or not.
@@ -68,6 +88,8 @@ nothing is changed.
         <real>other</real>
       </table>
 ```
+- Auto generated timestamps now properly work via rtvals.
+
 ### Emailworker
 - Added subscribing to email content using `email:read` command.
 - Added passing a writable to 'callback' the result of a send attempt.
