@@ -1,6 +1,6 @@
 package util.database;
 
-import das.Paths;
+import meles.Paths;
 import org.tinylog.Logger;
 import util.tools.TimeTools;
 import util.xml.XMLdigger;

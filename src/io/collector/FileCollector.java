@@ -1,6 +1,6 @@
 package io.collector;
 
-import das.Core;
+import meles.Core;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.tinylog.Logger;
 import util.math.MathUtils;

@@ -1,7 +1,7 @@
 package util.database;
 
-import das.Commandable;
-import das.Paths;
+import meles.Commandable;
+import meles.Paths;
 import io.Writable;
 import org.tinylog.Logger;
 import util.LookAndFeel;

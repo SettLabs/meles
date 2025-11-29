@@ -1,4 +1,4 @@
-package das;
+package meles;
 
 import io.Writable;
 import io.collector.CollectorPool;
@@ -48,7 +48,7 @@ import java.util.StringJoiner;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Stream;
 
-public class DAS implements Commandable{
+public class Meles implements Commandable{
 
     private static final String version = "1.1.0";
 
@@ -92,7 +92,7 @@ public class DAS implements Commandable{
     /* Threading */
     private final EventLoopGroup nettyGroup = new NioEventLoopGroup(2, new DefaultThreadFactory("Global-group")); // Single group so telnet,trans and StreamManager can share it
 
-    public DAS() {
+    public Meles() {
 
         tinylogPath = figureOutTinyLogPath();   // This needs to be done before tinylog is used because it sets the paths
         if( !checkSettingsFile() ) // Check if the file exist and create if it doesn't, if it does verify it
@@ -379,7 +379,7 @@ public class DAS implements Commandable{
      */
     private void addMqttPool(){
         mqttPool = new MqttPool(rtvals, nettyGroup);
-        addCommandable( mqttPool,"mqtt");
+        addCommandable( mqttPool,"mqtt","stop");
     }
     /* *****************************************  T R A N S S E R V E R ***************************************** */
     /**
@@ -734,7 +734,7 @@ public class DAS implements Commandable{
     /* END OF COMMANDABLE */
     public static void main(String[] args) {
 
-        DAS das = new DAS();
+        Meles das = new Meles();
 
         if( das.telnet == null ){  // If no telnet server was created
             das.addTelnetServer(); // Do it anyway

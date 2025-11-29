@@ -1,6 +1,6 @@
 package util.database;
 
-import das.Paths;
+import meles.Paths;
 import org.tinylog.Logger;
 import util.data.store.ValStore;
 import util.data.vals.*;

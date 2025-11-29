@@ -1,8 +1,8 @@
 package io.matrix;
 
-import das.Commandable;
-import das.Core;
-import das.Paths;
+import meles.Commandable;
+import meles.Core;
+import meles.Paths;
 import io.Writable;
 import io.forward.StepFab;
 import io.forward.steps.MathStep;
@@ -343,7 +343,7 @@ public class MatrixClient implements Writable, Commandable {
                     case "m.text" -> {
                         final String send = body;
                         room.ifPresent(r -> r.writeToTargets(send));
-                        if (body.startsWith("das") || body.startsWith(userName)) { // check if message for us
+                        if (body.startsWith("meles") || body.startsWith(userName)) { // check if message for us
                             processMelesMtext(body, originRoom, room.orElse(null), from);
                         } else if (body.equalsIgnoreCase("hello?")) {
                             sendMessage(originRoom, "Yes?");

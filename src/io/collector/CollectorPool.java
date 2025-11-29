@@ -1,8 +1,8 @@
 package io.collector;
 
-import das.Commandable;
-import das.Core;
-import das.Paths;
+import meles.Commandable;
+import meles.Core;
+import meles.Paths;
 import io.Writable;
 import io.netty.util.concurrent.DefaultThreadFactory;
 import org.apache.commons.lang3.math.NumberUtils;

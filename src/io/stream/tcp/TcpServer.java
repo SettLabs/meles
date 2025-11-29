@@ -1,7 +1,7 @@
 package io.stream.tcp;
 
-import das.Commandable;
-import das.Paths;
+import meles.Commandable;
+import meles.Paths;
 import io.Writable;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.*;

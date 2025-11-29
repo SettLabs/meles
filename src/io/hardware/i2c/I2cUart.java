@@ -3,7 +3,7 @@ package io.hardware.i2c;
 import com.diozero.api.DigitalInputEvent;
 import com.diozero.api.RuntimeIOException;
 import com.diozero.api.function.DeviceEventConsumer;
-import das.Core;
+import meles.Core;
 import io.Writable;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;

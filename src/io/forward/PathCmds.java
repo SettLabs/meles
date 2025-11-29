@@ -1,6 +1,6 @@
 package io.forward;
 
-import das.Paths;
+import meles.Paths;
 import org.apache.commons.lang3.ArrayUtils;
 import org.tinylog.Logger;
 import util.LookAndFeel;

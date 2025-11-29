@@ -1,7 +1,7 @@
 package util.cmds;
 
-import das.Commandable;
-import das.Paths;
+import meles.Commandable;
+import meles.Paths;
 import io.email.Email;
 import io.email.EmailSending;
 import io.hardware.gpio.InterruptPins;

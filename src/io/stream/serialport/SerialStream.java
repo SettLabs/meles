@@ -1,7 +1,7 @@
 package io.stream.serialport;
 
 import com.fazecast.jSerialComm.*;
-import das.Core;
+import meles.Core;
 import io.Writable;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;

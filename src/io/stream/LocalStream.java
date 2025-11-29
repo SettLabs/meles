@@ -1,6 +1,6 @@
 package io.stream;
 
-import das.Core;
+import meles.Core;
 import io.Writable;
 import org.tinylog.Logger;
 import util.xml.XMLdigger;

@@ -13,7 +13,7 @@ public class IntegerVal extends BaseVal implements NumericVal {
     int value, defValue;
 
     ConditionBlock preCheck = NoOpBlock.INSTANCE;
-    ;
+
     boolean ignorePre = true;
     ConditionBlock postCheck = NoOpBlock.INSTANCE;
     boolean ignorePost = true;
@@ -45,7 +45,10 @@ public class IntegerVal extends BaseVal implements NumericVal {
         var pre = preCheck.start(value, this.value);
         if (ignorePre || pre) {
             var res = math.eval(value, this.value, 0);
-            var post = postCheck.start(value, this.value, res);
+            var old=this.value;
+            if( ignorePost )
+                this.value = res;
+            var post = postCheck.start(value, old, res);
             if (ignorePost || post) {
                 this.value = res;
                 return true;

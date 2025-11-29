@@ -1,7 +1,7 @@
 package util.tools;
 
-import das.Commandable;
-import das.Core;
+import meles.Commandable;
+import meles.Core;
 import io.Writable;
 import org.tinylog.Logger;
 import util.xml.XMLdigger;

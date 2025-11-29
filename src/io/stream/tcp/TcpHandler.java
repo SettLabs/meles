@@ -1,6 +1,6 @@
 package io.stream.tcp;
 
-import das.Core;
+import meles.Core;
 import io.Writable;
 import io.netty.channel.*;
 import io.netty.handler.codec.TooLongFrameException;

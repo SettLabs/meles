@@ -1,6 +1,6 @@
 package util.cmds;
 
-import das.Paths;
+import meles.Paths;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.tinylog.Logger;
 import util.LookAndFeel;

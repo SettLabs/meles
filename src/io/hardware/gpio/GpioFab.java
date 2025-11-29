@@ -2,7 +2,7 @@ package io.hardware.gpio;
 
 import com.diozero.api.*;
 import com.diozero.sbc.LocalSystemInfo;
-import das.Paths;
+import meles.Paths;
 import org.tinylog.Logger;
 
 import java.util.Optional;

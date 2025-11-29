@@ -1,7 +1,7 @@
 package io.telnet;
 
-import das.Core;
-import das.Paths;
+import meles.Core;
+import meles.Paths;
 import io.Writable;
 import io.netty.channel.*;
 import io.netty.handler.codec.TooLongFrameException;

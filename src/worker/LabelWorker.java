@@ -1,7 +1,7 @@
 package worker;
 
-import das.CommandPool;
-import das.Core;
+import meles.CommandPool;
+import meles.Core;
 import io.telnet.TelnetCodes;
 import org.tinylog.Logger;
 

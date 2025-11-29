@@ -1,6 +1,6 @@
 package util.tasks.blocks;
 
-import das.Core;
+import meles.Core;
 import io.Writable;
 import org.tinylog.Logger;
 import worker.Datagram;

@@ -1,8 +1,8 @@
 package io.stream;
 
-import das.Commandable;
-import das.Core;
-import das.Paths;
+import meles.Commandable;
+import meles.Core;
+import meles.Paths;
 import io.Writable;
 import io.collector.CollectorFuture;
 import io.collector.ConfirmCollector;

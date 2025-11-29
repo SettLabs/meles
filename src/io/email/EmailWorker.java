@@ -1,8 +1,8 @@
 package io.email;
 
-import das.Commandable;
-import das.Core;
-import das.Paths;
+import meles.Commandable;
+import meles.Core;
+import meles.Paths;
 import io.Writable;
 import io.collector.BufferCollector;
 import io.collector.CollectorFuture;

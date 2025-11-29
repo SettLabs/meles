@@ -1,6 +1,6 @@
 package io.stream.tcp;
 
-import das.Core;
+import meles.Core;
 import io.Writable;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.*;

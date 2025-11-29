@@ -1,6 +1,6 @@
 package worker;
 
-import das.Paths;
+import meles.Paths;
 import io.forward.steps.AbstractStep;
 import io.forward.LinkedStepsFab;
 import org.tinylog.Logger;
