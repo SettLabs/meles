@@ -116,6 +116,7 @@ public class Meles implements Commandable{
         addLabelWorker();       // Add Label worker
         addStreamManager();     // Add Stream manager
         addI2CWorker();         // Add I2C
+        addTaskManagerPool();       // Add Taskmanagers
 
         prepareForwards();      // Add forwards
 
