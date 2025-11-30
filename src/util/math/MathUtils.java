@@ -385,7 +385,7 @@ public class MathUtils {
         return MathUtils.roundDouble(Math.sqrt(sum2 / set.size()), decimals);
     }
 
-    public static double calcVariance(double[] window) {
+    public static double calcSumOfSquares(double[] window) {
         var sum = DoubleStream.of(window).sum();
         var avg = sum / window.length;
         return DoubleStream.of(window).map(d -> (d - avg) * (d - avg)).sum();
