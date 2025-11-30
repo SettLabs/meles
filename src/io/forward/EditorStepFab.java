@@ -197,7 +197,7 @@ public class EditorStepFab {
                 info.add("-> IndexReplace with " + content + " at index " + index);
                 yield addIndexReplace(index, deli, content, rtvals);
             }
-            case "removeindex" -> {
+            case "removeindex","removeitem","cutitem" -> {
                 Logger.info("(ef) -> Added remove index " + index);
                 info.add("-> Remove item at index " + index);
                 yield addIndexReplace(NumberUtils.toInt(content, -1), deli, "", rtvals);
