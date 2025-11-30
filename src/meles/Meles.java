@@ -340,6 +340,7 @@ public class Meles implements Commandable{
      */
     private void addTaskManagerPool() {
         taskManagerPool = new TaskManagerPool(rtvals);
+        taskManagerPool.reloadAll();
         addCommandable(taskManagerPool, "tm");
     }
     /* ******************************************  S T R E A M P O O L ***********************************************/
