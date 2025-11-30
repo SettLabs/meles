@@ -140,7 +140,7 @@ public class FilterStepFab {
                 case "maxlength" -> createMaximumLength(Tools.parseInt(value, -1));
                 case "nmea" -> createNMEAcheck(Tools.parseBool(value, true));
                 case "regex" -> createRegex(value);
-                case "logic" -> createLogicEvaluator(delimiter, value, rtvals);
+                case "logic","math" -> createLogicEvaluator(delimiter, value, rtvals);
                 default -> {
                     if (type.startsWith("at")) {
                         var in = type.substring(2);
@@ -274,7 +274,7 @@ public class FilterStepFab {
                 .add("    fe. <filter type='nmea'>true</filter> --> The data must end be a valid nmea string");
         join.add(gr + "regex" + re + " -> Matches the given regex")
                 .add("    fe. <filter type='regex'>\\s[a,A]</filter> --> The data must contain an empty character followed by a in any case");
-        join.add(gr + "math" + re + " -> Checks a mathematical comparison")
+        join.add(gr + "logic" + re + " -> Checks a logical comparison")
                 .add("    fe. <filter type='math' delimiter=','>i1 below 2500 and i1 above 10</filter>");
         join.add(gr + "match" + re + " -> Compare to the item at index x")
                 .add("    fe. <filter at1='test'> ");
