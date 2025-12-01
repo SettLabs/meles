@@ -26,6 +26,7 @@ If you want to check if a forward is working as expected, it's possible to creat
 <path>
     <plainsrc>Hello World!</plainsrc> <!-- Will send Hello World every second -->
     <plainsrc delay="100ms" interval="10s">Hello??</plainsrc> <!-- Will send hello?? every 10s with initial delay of 100ms -->
+    <rtvalsrc>{random:6} and {d:rolls_max}</rtvalsrc> <!-- Allows for lines that combine constants and rtvals -->
     <filesrc>todo</filesrc> <!-- will send the data from all the files in the map one line at a time at 1s interval -->
     <cmdsrc>st</cmdsrc> <!-- will send the result of the cmd -->
 </path>
