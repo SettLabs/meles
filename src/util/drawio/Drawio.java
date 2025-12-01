@@ -238,7 +238,9 @@ public class Drawio {
             var res = this.params.get(param);
             return res != null ? res : def;
         }
-
+        public void setParam(String param, String val) {
+            this.params.put(param,val);
+        }
         public double getParam(String param, double def) {
             var res = this.params.get(param);
             return res != null ? NumberUtils.toDouble(res, def) : def;
