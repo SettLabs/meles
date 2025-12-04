@@ -21,6 +21,7 @@ Note: Version numbering: x.y.z
 
 ### MQTT
 - Fixed: Data stream can now be stopped in telnet.
+- Fixed: Overlapping subscribe requests aren't honored.
 - Moved code to MQTTv5
 - Enabled the use of properties:
   - 'Datatype' is added by default and based on the used rtval.
