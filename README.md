@@ -1,17 +1,16 @@
-meles
+Meles
 =========
-## Whats in a name?
+## Your Data Ingestion Workhorse
 
-Meles is a data logger that quietly ventured into data acquisition territory.  
-Like its namesake, it prefers to stay in the background, reliably digging and storing data without a fuss.
+*Like its namesake, Meles works relentlessly in the background—not just digging and storing, 
+but actively routing, transforming, and automating your data flows so Grafana can shine.*
 
-It still doesn't like to be seen, leaving visualization to projects like Grafana. 
-This focus lets Meles do what it does best:
-- **Automation:** It evolved from passively logging data to a powerful automation workflow engine.
-- **Transformation:** It learned to shape and refine data in real-time with built-in parsers and transformers.
+1. **"My sensor speaks Serial, but I need MQTT"** → Meles converts protocols
+2. **"I need to calculate derived values in real-time"** → Meles does windowed analytics
+3. **"Writing ingestion scripts is taking forever"** → Meles offers visual design (Draw.io)
+4. **"My data needs cleaning before storage"** → Meles filters and transforms
 
 Want to get started right away? Check the [Basics Guide](https://github.com/michieltjampens/meles/blob/main/docs/Basics.md).
-Or, read on to see how Meles turned its 'burrow' into a sett to be proud of.
 
 ## Basics
 
