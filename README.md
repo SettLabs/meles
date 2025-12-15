@@ -53,7 +53,7 @@ Starting with version 1.0.0, meles supports reading Draw.io diagrams as a basic 
 
 They say a picture is worth a thousand words... (but need to update this).
 
-<img src="https://github.com/user-attachments/assets/9b7b42d5-9822-4cb1-87cb-9cbfa2a28ac8" width="500" height="300">
+<img src="drawio/example.png" width="500" height="300">
 
 ## Data Collection
 
