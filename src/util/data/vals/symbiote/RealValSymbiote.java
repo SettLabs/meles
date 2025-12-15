@@ -1,14 +1,18 @@
-package util.data.vals;
+package util.data.vals.symbiote;
 
 import io.Writable;
 import org.apache.commons.lang3.ArrayUtils;
 import util.data.procs.ValPrinter;
+import util.data.vals.BaseVal;
+import util.data.vals.NumericVal;
+import util.data.vals.RealVal;
+import util.data.vals.ValUser;
 
 import java.util.Arrays;
 
-public class RealValSymbiote extends RealVal {
+public class RealValSymbiote extends RealVal implements Symbiote, ValUser {
 
-    RealVal[] underlings;
+    NumericVal[] underlings;
     boolean passOriginal = false;
     int level = 0;
 
@@ -21,7 +25,7 @@ public class RealValSymbiote extends RealVal {
 
     public boolean update(double val) {
         var result = underlings[0].update(val);
-        this.value = underlings[0].value();
+        this.value = underlings[0].asDouble();
 
         var forwardedValue = passOriginal ? val : value;
         if (result || passOriginal)
@@ -31,7 +35,7 @@ public class RealValSymbiote extends RealVal {
     }
 
     public double value() {
-        return underlings[0].value();
+        return underlings[0].asDouble();
     }
 
     public int level() {
@@ -40,7 +44,7 @@ public class RealValSymbiote extends RealVal {
     @Override
     public void resetValue() {
         underlings[0].defValue(defValue);
-        value = underlings[0].value();
+        value = underlings[0].asDouble();
     }
 
     public void defValue(double defValue) {
@@ -54,8 +58,29 @@ public class RealValSymbiote extends RealVal {
 
     public NumericVal[] getUnderlings(){ return underlings; }
 
-    public RealVal[] getDerived() {
+    public NumericVal[] getDerived() {
         return Arrays.copyOfRange(underlings, 1, underlings.length);
+    }
+
+    @Override
+    public NumericVal getHost() {
+        return underlings[0];
+    }
+
+    @Override
+    public boolean replaceUnderling(NumericVal repl) {
+        for( int i=1;i<underlings.length;i++ ){
+            if( underlings[i].id().equals(repl.id() )){
+                underlings[i]=repl;
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public void addUnderling(NumericVal underling) {
+
     }
 
     public void removePrinterUnderling(Writable wr){
@@ -74,5 +99,15 @@ public class RealValSymbiote extends RealVal {
 
     public String getExtraInfo() {
         return underlings[0].getExtraInfo();
+    }
+
+    @Override
+    public boolean isWriter() {
+        return true;
+    }
+
+    @Override
+    public boolean provideVal(BaseVal val) {
+        return false;
     }
 }

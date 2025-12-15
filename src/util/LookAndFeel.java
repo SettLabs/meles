@@ -2,9 +2,9 @@ package util;
 
 import io.telnet.TelnetCodes;
 import util.data.vals.DynamicUnit;
-import util.data.vals.IntegerValSymbiote;
+import util.data.vals.symbiote.IntegerValSymbiote;
 import util.data.vals.NumericVal;
-import util.data.vals.RealValSymbiote;
+import util.data.vals.symbiote.RealValSymbiote;
 
 import java.util.Arrays;
 import java.util.StringJoiner;

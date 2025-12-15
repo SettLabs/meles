@@ -10,7 +10,8 @@ import util.tasks.blocks.NoOpBlock;
 import java.math.BigDecimal;
 
 public class IntegerVal extends BaseVal implements NumericVal {
-    int value, defValue;
+    protected int value;
+    protected int defValue;
 
     ConditionBlock preCheck = NoOpBlock.INSTANCE;
 

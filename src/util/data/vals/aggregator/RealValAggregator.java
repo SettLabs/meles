@@ -1,6 +1,7 @@
-package util.data.vals;
+package util.data.vals.aggregator;
 
 import util.data.procs.DoubleArrayToDouble;
+import util.data.vals.RealVal;
 import util.math.MathUtils;
 
 import java.util.Arrays;

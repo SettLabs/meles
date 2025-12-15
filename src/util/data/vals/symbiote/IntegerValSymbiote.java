@@ -1,13 +1,16 @@
-package util.data.vals;
+package util.data.vals.symbiote;
 
 import io.Writable;
 import org.apache.commons.lang3.ArrayUtils;
 import util.data.procs.ValPrinter;
+import util.data.vals.BaseVal;
+import util.data.vals.IntegerVal;
+import util.data.vals.NumericVal;
+import util.data.vals.ValUser;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 
-public class IntegerValSymbiote extends IntegerVal {
+public class IntegerValSymbiote extends IntegerVal implements ValUser,Symbiote {
 
     NumericVal[] underlings;
     boolean passOriginal = false;
@@ -53,6 +56,11 @@ public class IntegerValSymbiote extends IntegerVal {
         value = host.value();
     }
 
+    @Override
+    public void defValue(double val) {
+        defValue=(int)val;
+    }
+
     public void defValue(int defValue) {
         host.defValue(defValue);
         this.defValue = defValue;
@@ -79,17 +87,16 @@ public class IntegerValSymbiote extends IntegerVal {
         }
         return false;
     }
-    public void removePrinterUnderling(Writable wr){
-        int index=-1;
-        for( int a=1;a<underlings.length;a++ ){
-            if( underlings[a] instanceof ValPrinter vp ){
-                if( vp.matchWritable(wr)) {
-                    index = a;
-                    break;
-                }
-            }
-        }
-        if( index>=1 )
-            underlings = ArrayUtils.remove(underlings,index);
+
+
+    @Override
+    public boolean isWriter() {
+        return true;
+    }
+
+    @Override
+    public boolean provideVal(BaseVal val) {
+        replaceUnderling((NumericVal) val);
+        return Arrays.stream(underlings).anyMatch(NumericVal::isDummy);
     }
 }

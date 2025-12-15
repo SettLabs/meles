@@ -6,6 +6,10 @@ import util.data.procs.Builtin;
 import util.data.procs.MathEvalForVal;
 import util.data.procs.Reducer;
 import util.data.vals.*;
+import util.data.vals.aggregator.IntegerValAggregator;
+import util.data.vals.aggregator.RealValAggregator;
+import util.data.vals.symbiote.IntegerValSymbiote;
+import util.data.vals.symbiote.RealValSymbiote;
 import util.evalcore.MathFab;
 import util.tasks.blocks.AbstractBlock;
 import util.tasks.blocks.ConditionBlock;
@@ -88,7 +92,7 @@ public class RtvalsParser {
             return null;
         String group = idArray[0], name = idArray[1];
         if (tools.rtvals().hasReal(group + "_" + name))
-            return tools.rtvals().getRealVal(OneTimeValUser.get(),group + "_" + name); //get is fine because of earlier has
+            return tools.rtvals().getRealVal(OneTimeValUser.get(),group + "_" + name);
         int window = cell.getParam("window", 0);
         var unit = cell.getParam("unit", "");
 
@@ -317,7 +321,6 @@ public class RtvalsParser {
             }else{ // Create a fake conditionblock?
                 valcell.val().setPostCheck(ConditionBlock.fakeBlock(block), true);
             }
-
         }
         var rtvals = tools.rtvals();
         // At this post the precondition should be taken care off... now it's the difficult stuff like symbiote etc

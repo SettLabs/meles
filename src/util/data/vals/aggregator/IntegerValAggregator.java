@@ -1,7 +1,7 @@
-package util.data.vals;
+package util.data.vals.aggregator;
 
-import org.tinylog.Logger;
 import util.data.procs.IntegerArrayToInteger;
+import util.data.vals.IntegerVal;
 
 import java.util.Arrays;
 import java.util.stream.IntStream;

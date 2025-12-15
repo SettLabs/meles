@@ -10,7 +10,8 @@ import util.tasks.blocks.NoOpBlock;
 import java.math.BigDecimal;
 
 public class RealVal extends BaseVal implements NumericVal {
-    double value = Double.NaN, defValue = Double.NaN;
+    protected double value = Double.NaN;
+    protected double defValue = Double.NaN;
 
     ConditionBlock preCheck = NoOpBlock.INSTANCE;
     boolean ignorePre = true;

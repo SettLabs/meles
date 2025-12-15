@@ -12,6 +12,9 @@ import org.tinylog.Logger;
 import util.LookAndFeel;
 import util.data.ValTools;
 import util.data.procs.ValPrinter;
+import util.data.vals.symbiote.IntegerValSymbiote;
+import util.data.vals.symbiote.RealValSymbiote;
+import util.data.vals.symbiote.SymbioteTools;
 import util.tools.TimeTools;
 import util.xml.XMLdigger;
 import worker.Datagram;
@@ -99,17 +102,29 @@ public class Rtvals implements Commandable,ValUser {
             Logger.error("Invalid RealVal received, won't try adding it");
             return null;
         }
-        if( rv instanceof RealValSymbiote ){
+        if( rv instanceof RealValSymbiote rvs){
             var old = realVals.get(rv.id());
+            applyUser(rvs,true);
             if( ! (old instanceof RealValSymbiote) && old !=null ){
-                realVals.remove(rv.id());
-
+                SymbioteTools.upgradeToRealSymbiote(rv);
             }
         }
-        if( realVals.putIfAbsent(rv.id(), rv) == null ) {
+        if( integerVals.putIfAbsent(rv.id(), rv) == null ) {
             broadCastCreation(rv); //because new was created or may
             if( rv instanceof RealValSymbiote ) // Because it might be a symbiote
                 broadcastReplacement(rv); // Because existing was replaced
+        }else{
+            broadcastReplacement(rv); // Because existing was replaced
+        }
+
+        applyUser(user,true);
+        if( rv instanceof RealValSymbiote){
+            var old = realVals.get(rv.id());
+            if( ! (old instanceof RealValSymbiote) && old !=null )
+                realVals.remove(rv.id());
+        }
+        if( realVals.putIfAbsent(rv.id(), rv) == null ) {
+            broadCastCreation(rv); //because new was created or may
         }else{
             broadcastReplacement(rv); // Because existing was replaced
         }
@@ -163,8 +178,9 @@ public class Rtvals implements Commandable,ValUser {
             Logger.error("Invalid IntegerVal received, won't try adding it");
             return null;
         }
-        if( iv instanceof IntegerValSymbiote ){
+        if( iv instanceof IntegerValSymbiote ivs){
             var old = integerVals.get(iv.id());
+            applyUser(ivs,true);
             if( ! (old instanceof IntegerValSymbiote) && old !=null ){
                 upgradeToIntegerSymbiote(iv);
             }
@@ -183,30 +199,22 @@ public class Rtvals implements Commandable,ValUser {
     public IntegerValSymbiote upgradeToIntegerSymbiote( IntegerVal iv ){
         var reg = integerVals.get(iv.id());
         IntegerValSymbiote ivs;
+        if( iv instanceof IntegerValSymbiote sym ){
+            ivs = sym;
+        }else{
+            ivs = new IntegerValSymbiote(0, iv );
+        }
+        integerVals.put(ivs.id(),ivs);
+
         if( reg.isDummy() ){// No such variable exist yet, so create it
-            if( iv instanceof IntegerValSymbiote sym ){
-                ivs=sym;
-            }else{
-                ivs = new IntegerValSymbiote(0, iv );
-            }
-            integerVals.put(ivs.id(),ivs);
             broadCastCreation(ivs);
         }else if( !(reg instanceof IntegerValSymbiote)){ // Exist, so encapsulate
-            if( iv instanceof IntegerValSymbiote sym ){ // Giving a symb, so use it
-                ivs=sym;
-            }else{
-                ivs = new IntegerValSymbiote(0, iv );
-            }
-            for( var i : integerVals.entrySet() ){
-                if( i.getValue() instanceof IntegerValSymbiote s )
-                    s.replaceUnderling(ivs);
-            }
-            integerVals.put(ivs.id(),ivs); // overwrite the old one
             broadcastReplacement(ivs);
         }else{
             Logger.info("Already a symbiote, not touching it");
             ivs=(IntegerValSymbiote) reg;
         }
+        applyUser(ivs,true);
         return ivs;
     }
     public boolean hasInteger(String id) {
@@ -419,6 +427,7 @@ public class Rtvals implements Commandable,ValUser {
         } else if ( av instanceof IntegerVal iv) {
             if( !(iv instanceof IntegerValSymbiote sy) ){
                 var sym = upgradeToIntegerSymbiote(iv);
+                applyUser(sym,true);
                 sym.addUnderling(new ValPrinter(av,writable));
             }else{
                 sy.addUnderling(new ValPrinter(av,writable));

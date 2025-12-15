@@ -34,6 +34,6 @@ public interface NumericVal {
     default String getExtraInfo() {
         return "";
     }
-
+    public void defValue( double val );
     boolean isDummy();
 }
