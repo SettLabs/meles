@@ -262,7 +262,7 @@ public class ValStore implements ValUser{
 
         for( int a=0;a<localValRefs.size();a++ ){
             var old = localValRefs.get(a);
-            if( old.id().equals(newVal.id()) ){
+            if( old!=null && old.id().equals(newVal.id()) ){
                 if( old.getClass().isInstance(newVal) || old instanceof AnyDummy ) {
                     localValRefs.set(a, newVal);
                     Logger.info(id()+" -> Replaced "+old.id() + (old.isDummy()?" (d)":""));
@@ -279,7 +279,7 @@ public class ValStore implements ValUser{
             }
         }
         for( var val : localValRefs ){
-            if( val.isDummy() )
+            if( val !=null && val.isDummy() )
                 return false;
         }
         for( var val : calVal ){
