@@ -193,8 +193,20 @@ public class SerialStream extends BaseStream implements Writable {
 
         forwardData(msg);
     }
-    protected void forwardData( String message){
-        forwardData(message.getBytes());
+    protected void forwardData( String message ){
+        timestamp.set(Instant.now().toEpochMilli());
+        try {
+            targets.forEach(dt -> eventLoopGroup.submit(() -> {
+                try {
+                    dt.writeLine(id, message);
+                } catch (Exception e) {
+                    Logger.error(id + " -> Something bad while forwarding to " + dt.id(), e.getMessage());
+                }
+            }));
+            targets.removeIf(wr -> !wr.isConnectionValid()); // Clear inactive
+        } catch (Exception e) {
+            Logger.error(id + " -> Something bad in serial port: ", e);
+        }
     }
 
     private void forwardData(byte[] data) {
@@ -212,7 +224,7 @@ public class SerialStream extends BaseStream implements Writable {
                         dt.writeLine(id, new String(data));
                     }
                 } catch (Exception e) {
-                    Logger.error(id + " -> Something bad while writeLine to " + dt.id(), e);
+                    Logger.error(id + " -> Something bad while writeLine to " + dt.id(), e.getMessage());
                 }
             }));
             targets.removeIf(wr -> !wr.isConnectionValid()); // Clear inactive
