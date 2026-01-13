@@ -263,6 +263,11 @@ public class TimeTools {
             if( msIndex!= -1){
                 int millis = Tools.parseInt(period.substring(0, msIndex), 0);
                 if( unit == TimeUnit.SECONDS ){
+                    if( millis<1000 ){
+                        Logger.warn("Millis is less than 1000, will be rounded up/down. "+period);
+                        if( millis>=500)
+                            millis=1000;
+                    }
                     total += millis/1000;   // Users asked seconds, so add rounded
                 }else if (unit == TimeUnit.MILLISECONDS ){
                     total = total*1000+millis;
