@@ -280,8 +280,9 @@ public class StreamManager implements StreamListener, CollectorFuture, Commandab
 			if (confirmCollector == null)
 				return noNeedConfirmCollector(txt, id, stream);
 		}
-		confirmCollector.addConfirm(txt.split(";"), reply);
+		confirmCollector.addConfirm(txt.split("\\|"), reply);
 		confirmCollectors.put(id, confirmCollector);
+
 		return txt;
 	}
 
