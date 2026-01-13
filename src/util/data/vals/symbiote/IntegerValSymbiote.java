@@ -87,7 +87,19 @@ public class IntegerValSymbiote extends IntegerVal implements ValUser,Symbiote {
         }
         return false;
     }
-
+    public void removePrinterUnderling(Writable wr){
+        int index=-1;
+        for( int a=1;a<underlings.length;a++ ){
+            if( underlings[a] instanceof ValPrinter vp ){
+                if( vp.matchWritable(wr)) {
+                    index = a;
+                    break;
+                }
+            }
+        }
+        if( index>=1 )
+            underlings = ArrayUtils.remove(underlings,index);
+    }
 
     @Override
     public boolean isWriter() {

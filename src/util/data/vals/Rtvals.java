@@ -106,10 +106,10 @@ public class Rtvals implements Commandable,ValUser {
             var old = realVals.get(rv.id());
             applyUser(rvs,true);
             if( ! (old instanceof RealValSymbiote) && old !=null ){
-                SymbioteTools.upgradeToRealSymbiote(rv);
+                upgradeToRealSymbiote(old);
             }
         }
-        if( integerVals.putIfAbsent(rv.id(), rv) == null ) {
+        if( realVals.putIfAbsent(rv.id(), rv) == null ) {
             broadCastCreation(rv); //because new was created or may
             if( rv instanceof RealValSymbiote ) // Because it might be a symbiote
                 broadcastReplacement(rv); // Because existing was replaced
@@ -165,7 +165,27 @@ public class Rtvals implements Commandable,ValUser {
             rv.update(value);
         }
     }
+    public RealValSymbiote upgradeToRealSymbiote(RealVal iv ){
+        var reg = realVals.get(iv.id());
+        RealValSymbiote rvs;
+        if( iv instanceof RealValSymbiote sym ){
+            rvs = sym;
+        }else{
+            rvs = new RealValSymbiote(0, iv );
+        }
+        realVals.put(rvs.id(),rvs);
 
+        if( reg.isDummy() ){// No such variable exist yet, so create it
+            broadCastCreation(rvs);
+        }else if( !(reg instanceof RealValSymbiote)){ // Exist, so encapsulate
+            broadcastReplacement(rvs);
+        }else{
+            Logger.info("Already a symbiote, not touching it");
+            rvs=(RealValSymbiote) reg;
+        }
+        applyUser(rvs,true);
+        return rvs;
+    }
     /* ************************************ I N T E G E R V A L ***************************************************** */
 
     /**
