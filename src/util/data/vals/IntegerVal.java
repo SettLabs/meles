@@ -34,6 +34,9 @@ public class IntegerVal extends BaseVal implements NumericVal {
         val.markAsDummy();
         return val;
     }
+    protected boolean hasChecks(){
+        return preCheck instanceof NoOpBlock || postCheck instanceof NoOpBlock;
+    }
     public int value() {
         return value;
     }

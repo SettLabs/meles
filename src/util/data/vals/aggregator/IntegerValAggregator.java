@@ -30,6 +30,10 @@ public class IntegerValAggregator extends IntegerVal {
         currentIndex = (currentIndex + 1) % windowSize;
         if (currentIndex == 0)
             filled = true;
+
+        if( filled && hasChecks())
+            super.update(value());
+
         return false;
     }
 

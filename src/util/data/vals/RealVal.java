@@ -45,7 +45,9 @@ public class RealVal extends BaseVal implements NumericVal {
         }
         return false;
     }
-
+    protected boolean hasChecks(){
+        return preCheck instanceof NoOpBlock || postCheck instanceof NoOpBlock;
+    }
     public void setPreCheck(ConditionBlock pre) {
         ignorePre = false;
         preCheck = pre;

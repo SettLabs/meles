@@ -36,6 +36,8 @@ public class RealValAggregator extends RealVal {
 
         if (currentIndex == 0)
             filled = true;
+        if( filled && hasChecks())
+            super.update(value());
         return false;
     }
 
