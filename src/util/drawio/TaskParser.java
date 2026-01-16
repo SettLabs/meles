@@ -411,8 +411,8 @@ public class TaskParser {
             }
             cell.removeArrow("next"); // Make sure the arrow isn't used twice
         }
-        fb.setFlag( tools.rtvals().getFlagVal(fb, flagId) );
         fb.id(blockId);
+        fb.setFlag( tools.rtvals().getFlagVal(fb, flagId) );
         if (!addNext(cell, fb, tools, "next", "pass", "yes", "ok")) {
             if (cell.hasArrows() && !cell.getArrowLabels().equals("?"))
                 Logger.error(blockId + " -> Flag Block without 'next/pass/yes/ok' arrow, but does have at least one other arrow connected with label(s) " + cell.getArrowLabels() + " )");
