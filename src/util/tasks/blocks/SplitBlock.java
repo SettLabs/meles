@@ -24,8 +24,8 @@ public class SplitBlock extends AbstractBlock implements Writable {
     public SplitBlock(EventLoopGroup eventLoop, String order) {
         this.eventLoop = eventLoop;
         sequence = switch(order){
-            case "randomsingle" -> ORDER.RANDOMSINGLE;
-            case "random" -> ORDER.RANDOM;
+            case "randomsingle","random" -> ORDER.RANDOMSINGLE;
+            case "randomall" -> ORDER.RANDOM;
             default -> ORDER.SEQUENTIAL;
         };
         Logger.info("Created SplitBlock with order: " + order);
@@ -52,6 +52,7 @@ public class SplitBlock extends AbstractBlock implements Writable {
             }
             case RANDOMSINGLE -> {
                 int rand = (int) (Math.random()*nexts.size()); // Random is 0 till 0.99 so can never include the size
+                Logger.info("Starting "+rand+" at random, "+nexts.get(rand).id() );
                 nexts.get(rand).start();
             }
             default -> Logger.warn("Not implemented yet: "+sequence);
