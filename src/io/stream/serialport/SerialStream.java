@@ -223,8 +223,8 @@ public class SerialStream extends BaseStream implements Writable {
                     } else {
                         dt.writeLine(id, new String(data));
                     }
-                } catch (Exception e) {
-                    Logger.error(id + " -> Something bad while writeLine to " + dt.id(), e.getMessage());
+                } catch ( Exception e) {
+                    Logger.error(id + " -> Something bad while writeLine to " + dt.id(), e);
                 }
             }));
             targets.removeIf(wr -> !wr.isConnectionValid()); // Clear inactive

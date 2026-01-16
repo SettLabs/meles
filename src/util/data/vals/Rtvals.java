@@ -85,7 +85,7 @@ public class Rtvals implements Commandable,ValUser {
         if (val instanceof IntegerVal iv)
             return addIntegerVal(user,iv);
         if (val instanceof FlagVal fv)
-            return addFlagVal(user,fv,false);
+            return addFlagVal(user,fv);
         if (val instanceof TextVal tv)
             return addTextVal(user,tv);
         return null;
@@ -139,6 +139,7 @@ public class Rtvals implements Commandable,ValUser {
      */
     public RealVal getRealVal(ValUser user, String id) {
         var opt = Optional.ofNullable(realVals.get(id));
+        Logger.info("Received request for "+id+ " from "+ user.id());
         applyUser(user,opt.isPresent());
         var split = id.split("_",2);
         return opt.orElseGet(() -> RealVal.createDummy(split[0], split[1]));
@@ -249,6 +250,7 @@ public class Rtvals implements Commandable,ValUser {
      */
     public IntegerVal getIntegerVal(ValUser user, String id) {
         var opt = Optional.ofNullable(integerVals.get(id));
+        Logger.info("Received request for "+id+ " from "+ user.id());
         applyUser(user,opt.isPresent());
         var split = id.split("_",2);
         return opt.orElseGet(() -> IntegerVal.createDummy(split[0], split[1]));
@@ -272,6 +274,7 @@ public class Rtvals implements Commandable,ValUser {
      */
     public TextVal getTextVal(ValUser user, String id) {
         var opt = Optional.ofNullable(textVals.get(id));
+        Logger.info("Received request for "+id+ " from "+ user.id());
         applyUser(user,opt.isPresent());
         var split = id.split("_",2);
         return opt.orElseGet(() -> TextVal.createDummy(split[0], split[1]));

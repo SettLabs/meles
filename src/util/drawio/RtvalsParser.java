@@ -246,7 +246,7 @@ public class RtvalsParser {
                             break;
                     }
                     if (valcell == null) {
-                        Logger.error("Couldn't match shape with a val: " + target.getType());
+                        Logger.error("Couldn't match shape with a val: "+ target.drawId+"=" + target.getType());
                     }
                 }
                 case "conditionblock" -> {
@@ -302,7 +302,7 @@ public class RtvalsParser {
                 }
             }
             if( valcell==null && !targetChanged ){
-                Logger.error("Couldn't find match, aborting");
+                Logger.error("Couldn't find match, aborting. Melestype="+target.getType());
                 break;
             }
         }

@@ -28,6 +28,7 @@ public class SplitBlock extends AbstractBlock implements Writable {
             case "random" -> ORDER.RANDOM;
             default -> ORDER.SEQUENTIAL;
         };
+        Logger.info("Created SplitBlock with order: " + order);
     }
     public String type(){ return "SplitBlock";}
     public SplitBlock setInterval(String interval) {

@@ -82,7 +82,7 @@ public class DelayBlock extends AbstractBlock {
      * @param shouldRestart Whether a new delay should start or not
      */
     private void cancelIfRunning(boolean shouldRestart) {
-        Logger.info("Done:" + future.isDone() + " cancel:" + future.isCancelled());
+        Logger.info(id()+" -> Done:" + future.isDone() + " cancel:" + future.isCancelled());
         if (waiting && future != null) {
             Logger.info(telnetId() + " -> Got stopped with " + TimeTools.convertPeriodToString(future.getDelay(TimeUnit.MILLISECONDS), TimeUnit.MILLISECONDS) + " left.");
             future.cancel(false);
