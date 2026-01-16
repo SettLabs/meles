@@ -146,7 +146,7 @@ public class RtvalsParser {
         var idArray = getId(cell);
         if (idArray.length == 0)
             return null;
-        var fv = tools.rtvals().addFlagVal(OneTimeValUser.get(), FlagVal.newVal(idArray[0], idArray[1]),false);
+        var fv = tools.rtvals().addFlagVal(OneTimeValUser.get(), FlagVal.newVal(idArray[0], idArray[1]));
         return alterFlagVal(fv, cell, tools);
     }
 
@@ -177,7 +177,7 @@ public class RtvalsParser {
             lowBlock = TaskParser.createBlock(low, tools, fv.id() + "_low");
 
         fv.setBlocks(highBlock, lowBlock, raiseBlock, fallBlock);
-        tools.rtvals().addFlagVal( OneTimeValUser.get(), fv,false );
+        tools.rtvals().addFlagVal( OneTimeValUser.get(), fv );
         return fv;
     }
     private static String[] getId(Drawio.DrawioCell cell) {
@@ -239,7 +239,7 @@ public class RtvalsParser {
         while (valcell == null && target!=null) {
             targetChanged=false;
             switch (target.getType()) {
-                case "realval", "integerval" -> {
+                case "realval", "integerval","intval" -> {
                     for (var vc : vals) {
                         valcell = buildRealIntegerVal(vc, target, pre, post, builtin, math, scale);
                         if (valcell != null)
