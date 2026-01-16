@@ -173,6 +173,7 @@ public class XMLtools {
 			xformer.setOutputProperty(OutputKeys.INDENT, "yes");
 			xformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "2");
 			xformer.transform(source, result);
+			Logger.info("Written to "+xmlFile.getFileName());
 		} catch (Exception e) {
 			Logger.error("Failed writing XML: "+xmlFile);
 			Logger.error(e);

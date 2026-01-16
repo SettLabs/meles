@@ -149,7 +149,7 @@ public class GpioParser {
                 var flag = tls.rtvals().getFlagVal(OneTimeValUser.get(),flagId);
                 if( !flag.isDummy() ){
                     if( flag instanceof InputPin ip) {
-                        Logger.info("That flag already exist as inputpin, closing it.");
+                        Logger.info("The flag ("+flag.id()+") already exist as inputpin, closing it.");
                         ip.close();
                     }
                 }

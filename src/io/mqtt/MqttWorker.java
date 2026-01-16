@@ -748,12 +748,6 @@ public class MqttWorker implements MqttCallback,Writable,ValUser {
         }
         return true;
     }
-    public static int charOccurences( String data, char ch ){
-        int cnt = 0;
-        for( var c : data.toCharArray())
-            cnt += c==ch?1:0;
-        return cnt;
-    }
     private static boolean cleanSubs(ArrayList<Subscription> subs, String newSub ){
         if( subs.isEmpty())
             return false;

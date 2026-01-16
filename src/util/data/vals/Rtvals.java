@@ -320,6 +320,7 @@ public class Rtvals implements Commandable,ValUser {
     public void applyUser( ValUser user, boolean valOk ){
         if( OneTimeValUser.isOneTime(user))
             return;
+
         if( valOk) {
             if( !needCreations.contains(user)) // Make sure this isn't done if it's already in other one
                 needUpdates.add(user);
@@ -358,7 +359,7 @@ public class Rtvals implements Commandable,ValUser {
             Logger.error("rtvals -> Still missing "+needCreations.stream().map(ValUser::getValIssues).collect(Collectors.joining("; ")));
             ok=false;
         }
-        Logger.info("NeedUpdates contains "+needUpdates.size()+" elements.");
+        Logger.info("NeedUpdates contains "+needUpdates.size()+" element(s).");
         return ok;
     }
     /**

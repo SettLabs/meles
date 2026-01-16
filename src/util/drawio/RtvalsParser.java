@@ -108,7 +108,7 @@ public class RtvalsParser {
             var reducer = Reducer.getDoubleReducer( reducerType, defValue, window, (int)Math.pow(10,scale) );
             var ra = new RealValAggregator(group, name, unit, reducer, window);
             ra.setScale( scale );
-            Logger.info("Building RealValAggregator " + ra.id() + "of type "+reducer );
+            Logger.info("Building RealValAggregator " + ra.id() + " of type "+reducer );
             rv = ra;
         }
         return rv;
@@ -163,10 +163,10 @@ public class RtvalsParser {
             raiseBlock = TaskParser.createBlock(raised, tools, fv.id() + "_raise");
 
         var fall = cell.getArrowTarget("fall", "fell", "cleared", "falling", "lowered", idle ? "pressed" : "released");
-        Logger.info("Fall target found? "+(fall!=null));
+        Logger.info(fv.id()+" -> Fall target found? "+(fall!=null));
         if (fall != null)
             fallBlock = TaskParser.createBlock(fall, tools, fv.id() + "_fall");
-        Logger.info("Fallblock made? "+(fallBlock!=null));
+        Logger.info(fv.id()+" -> Fallblock made? "+(fallBlock!=null));
 
         var high = cell.getArrowTarget("high", "stillhigh");
         if (high != null)

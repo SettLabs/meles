@@ -45,7 +45,7 @@ public class FlagVal extends BaseVal implements NumericVal {
     }
 
     public void update(boolean state) {
-       Logger.info("Updating state of "+id()+" from "+value +" to "+state);
+      // Logger.info("Updating state of "+id()+" from "+value +" to "+state);
         if (value == state) { // Either STAY_LOW or STAY_HIGH
             if (value) { // stay high
                 highBlock.start();
