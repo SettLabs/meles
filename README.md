@@ -21,7 +21,7 @@ The fundamentals of any datalogger are in place:
 
 The following sections detail the more advanced features of meles.
 
-## Experimental feature: draw.io configuration
+## Draw.io based of automation tasks
 
 Starting with version 1.0.0, meles supports reading Draw.io diagrams as a basic form of visual programming.
 

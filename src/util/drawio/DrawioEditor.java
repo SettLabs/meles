@@ -22,7 +22,7 @@ public class DrawioEditor {
         }
     }
 
-    public static void addIdsInTab(XMLdigger dig, ArrayList<String[]> idMap) {
+    public static boolean addIdsInTab(XMLdigger dig, ArrayList<String[]> idMap) {
         var iterator = idMap.iterator();
         var altered = false;
         while (iterator.hasNext()) {

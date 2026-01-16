@@ -23,7 +23,7 @@ public abstract class BaseStream {
 	protected int priority = 1;				// Priority of the messages received, used by DataWorker
 	protected String label = "";			// The label that determines what needs to be done with a message
 	protected String id="";				    // A readable name for the handler
-    protected long readerIdleSeconds =0;
+    protected long readerIdleSeconds =-1;
 
     /* Things regarding the connection*/
     protected AtomicLong timestamp=new AtomicLong();  // Timestamp of the last received message, init so startup doesn't show error message

@@ -188,7 +188,7 @@ public class ValStoreFab {
                 case "flag", "bool" -> {
                     var flag = ValFab.buildFlagVal(val, groupID, rtvals);
                     if( flag.isPresent() ){
-                       localRtvals.set( pos, rtvals.addFlagVal(store,flag.get(),false) );
+                       localRtvals.set( pos, rtvals.addFlagVal(store,flag.get()) );
                     }else{
                         Logger.error("store -> Failed to read flag from xml");
                     }

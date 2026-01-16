@@ -37,7 +37,8 @@ Note: Version numbering: x.y.z
     - startup verification if all required rtvals are created
   - **Feature results**
     - Rtvals can now be used as a source
-
+- Fixed, aggregators couldn't trigger checks because nothing called the code...
+  
 ### MQTT
 - Fixed: Data stream can now be stopped in telnet.
 - Fixed: Overlapping subscribe requests aren't honored.
