@@ -93,4 +93,7 @@ public class ConditionBlock extends AbstractBlock implements ValUser {
         }
         return false;
     }
+    public String getValIssues(){
+        return "["+id()+" needs "+flag.id()+"]";
+    }
 }

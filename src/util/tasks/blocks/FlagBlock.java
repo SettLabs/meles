@@ -45,7 +45,7 @@ public class FlagBlock extends AbstractBlock implements ValUser {
     public boolean isWriter(){
         return true;
     }
-    public boolean provideVal( BaseVal newVal){
+    public boolean provideVal( BaseVal newVal ){
         if( newVal instanceof FlagVal fv ){
             if( fv.id().equals(flag.id())) {
                 flag = fv;
@@ -53,6 +53,9 @@ public class FlagBlock extends AbstractBlock implements ValUser {
             }
         }
         return false;
+    }
+    public String getValIssues(){
+        return "["+id()+" needs "+flag.id()+"]";
     }
     public void setFlag( FlagVal fv ){
         if( fv.isDummy() )
