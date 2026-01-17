@@ -35,13 +35,7 @@ public class WritableBlock extends AbstractBlock implements Writable {
     public boolean start() {
         clean = false;
         if (target != null) {
-            if (!target.writeLine(id, data)) {
-                Logger.info(id + " -> Failed to send to " + dest);
-                doAltRoute(true);
-            } else {
-                //Logger.info(id + " -> Send data to " + dest);
-                doNext();
-            }
+            sendData();
         } else {
             if (!cmd.isEmpty()) {
                 Logger.info(id() + " -> Requesting writable for " + dest);
@@ -50,7 +44,15 @@ public class WritableBlock extends AbstractBlock implements Writable {
         }
         return true;
     }
-
+    private void sendData(){
+        if (!target.writeLine(id, data)) {
+            Logger.info(id + " -> Failed to send to " + dest);
+            doAltRoute(true);
+        } else {
+            Logger.info(id + " -> Send data to " + dest);
+            doNext();
+        }
+    }
     public String toString() {
         return telnetId() + " -> Send '" + data + "' to " + dest;
     }
@@ -59,15 +61,12 @@ public class WritableBlock extends AbstractBlock implements Writable {
     public void giveObject(String info, Object object) {
         if (info.equalsIgnoreCase("writable")) {
             target = (Writable) object;
+            Logger.info(id() + " -> Received writable from " + target.id());
             if (target != null) {
-                Logger.info(id() + " -> Received writable from " + target.id());
-                if (!target.writeLine(id, data)) {
-                    doAltRoute(true);
-                } else {
-                    doNext();
-                }
+                sendData();
             } else {
                 Logger.info(id() + " -> Received null instead of response to " + dest);
+                doErrorRoute(true);
             }
         } else {
             Logger.warn(id() + " -> Given object with unknown info... ?" + info);

@@ -68,6 +68,7 @@ public class DelayBlock extends AbstractBlock {
     @Override
     public boolean start() {
         if (clean) {
+            Logger.info("First wait for "+TimeTools.convertPeriodToString(initialDelay,TimeUnit.MILLISECONDS));
             firstRun();
         } else if (retrigger != RETRIGGER.IGNORE) {
             cancelIfRunning(retrigger == RETRIGGER.RESTART);
@@ -82,15 +83,16 @@ public class DelayBlock extends AbstractBlock {
      * @param shouldRestart Whether a new delay should start or not
      */
     private void cancelIfRunning(boolean shouldRestart) {
-        Logger.info(id()+" -> Done:" + future.isDone() + " cancel:" + future.isCancelled());
         if (waiting && future != null) {
             Logger.info(telnetId() + " -> Got stopped with " + TimeTools.convertPeriodToString(future.getDelay(TimeUnit.MILLISECONDS), TimeUnit.MILLISECONDS) + " left.");
             future.cancel(false);
             waiting = false;
             doAltRoute(true);
         }
-        if (shouldRestart)
+        if (shouldRestart) {
+            Logger.info("Waiting for "+TimeTools.convertPeriodToString(initialDelay,TimeUnit.MILLISECONDS));
             firstRun();
+        }
     }
     private void firstRun() {
         waiting = true;
@@ -115,6 +117,7 @@ public class DelayBlock extends AbstractBlock {
             Logger.info(id() + " -> Task is canceled or future is null, exiting...");
             return false;  // Exit early if the task is canceled or future is null
         }
+        Logger.info(id() + " -> Doing next task with "+reps+" reps left. (-1=infinite)");
         switch (reps) {
             case -1 -> super.doNext(); // -1 means endless
             case 0 -> { // Last rep done, take the detour
