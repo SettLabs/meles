@@ -83,13 +83,14 @@ public class IntegerVal extends BaseVal implements NumericVal {
 
     @Override
     public boolean parseValue(String stringValue) {
-        var v = NumberUtils.toInt(stringValue, Integer.MAX_VALUE - 1);
-        if (v == Integer.MAX_VALUE - 1) {
+        try{
+            var v = NumberUtils.createInteger(stringValue);
+            update(v);
+            return true;
+        }catch(NumberFormatException e){
             Logger.error(id() + "-> Failed to parse " + stringValue);
             return false;
         }
-        update(v);
-        return true;
     }
 
     public void setPreCheck(ConditionBlock pre) {

@@ -79,10 +79,19 @@ public class RealVal extends BaseVal implements NumericVal {
 
     @Override
     public boolean parseValue(String value) {
-        var v = NumberUtils.createDouble(value);
-        if (v == null)
+        try {
+            var v = NumberUtils.createDouble(value);
+            if (v == null)
+                return false;
+            return update(v);
+        }catch(NumberFormatException e){
+            if( value.toLowerCase().startsWith("0x")){
+                Logger.warn("Refused to parse hexadecimal ("+value+") to a real "+id()+", use int instead.");
+            }else {
+                Logger.error("Cannot parse " + value + " as a number for " + id());
+            }
             return false;
-        return update(v);
+        }
     }
 
     public void defValue(double defValue) {
