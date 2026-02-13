@@ -1,12 +1,10 @@
 package util.evalcore;
 
 import io.telnet.TelnetCodes;
+import org.apache.commons.lang3.math.NumberUtils;
 import org.tinylog.Logger;
 import util.data.procs.MathEvalForVal;
-import util.data.vals.BaseVal;
-import util.data.vals.FlagVal;
 import util.data.vals.NumericVal;
-import util.data.vals.ValUser;
 import util.tools.TimeTools;
 
 import java.math.BigDecimal;
@@ -163,7 +161,7 @@ public class MathEvaluator extends BaseEvaluator implements MathEvalForVal, Eval
                 return false;
             }
             if (val == null) {
-                Logger.error(id + " (me) -> Scratchpad entry at " + a + " coming from r" + r + " is (still) null.");
+                Logger.error(id + " (me) -> Scratchpad entry at " + a + " coming from r" + r + " is (still) null original expression "+originalExpression);
                 return false;
             }
             scratchpad[a] = val;
@@ -292,17 +290,7 @@ public class MathEvaluator extends BaseEvaluator implements MathEvalForVal, Eval
         if (bds == null)
             bds = new BigDecimal[inputs.length];
 
-        for (Integer ref : refLookup) {
-            if (ref < 100 && bds[ref] == null) { // meaning from input and don't overwrite
-                try {
-                    bds[ref] = new BigDecimal(inputs[ref]);
-                } catch (NumberFormatException e) {
-                    Logger.error(e);
-                }
-            }
-        }
-        if (next != null)
-            next.prepareBdArray(bds, inputs);
+        prepareBdArray(bds, inputs);
         return bds;
     }
 
@@ -310,9 +298,16 @@ public class MathEvaluator extends BaseEvaluator implements MathEvalForVal, Eval
         for (Integer ref : refLookup) {
             if (ref < 100 && bds[ref] == null) { // meaning from input and don't overwrite
                 try {
+                    NumberUtils.toInt(inputs[ref]);
                     bds[ref] = new BigDecimal(inputs[ref]);
                 } catch (NumberFormatException e) {
-                    Logger.error(e);
+                    if( NumberUtils.isCreatable(inputs[ref]) ){
+                        try{
+                            bds[ref] = new BigDecimal( NumberUtils.createLong(inputs[ref]) );
+                        } catch (NumberFormatException d) {
+                            Logger.error("NumberFormatException when parsing " + inputs[ref]);
+                        }
+                    }
                 }
             }
         }
