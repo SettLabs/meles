@@ -275,7 +275,7 @@ public class TaskManagerPool implements Commandable {
                 }
                 yield "! Failed to add taskset";
             }
-            case "startups" -> tl.getStartupTasks(nl);
+            case "startups","tasks" -> tl.getStartupTasks(nl);
             case "sets" -> tl.getTaskSetListing();
             case "stop" -> "Cancelled " + tl.stopAll() + " futures.";
             case "run" -> doRunCmd(cmds, tl);
@@ -305,10 +305,10 @@ public class TaskManagerPool implements Commandable {
             return "Started " + a + " task(set)s";
         } else {
             if (tm.hasTask(cmds[2])) {
-                return tm.startTask(cmds[2]) ? "Task Started" : "!Failed to start";
+                return tm.startTask(cmds[2]) ? "Task Started" : "! Failed to start";
             } else {
                 String[] arg = Arrays.copyOfRange(cmds, 3, cmds.length);
-                return tm.startTask(cmds[2]) ? "Task ok" : "! Failed/invalid " + cmds[2];
+                return tm.startTask(cmds[2]) ? "Task ok" : "! Failed/Invalid task id" + cmds[2];
             }
         }
     }

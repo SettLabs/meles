@@ -38,7 +38,7 @@ public class DelayBlock extends AbstractBlock {
     public DelayBlock useInterval(String initialDelay, String interval, int repeats) {
         this.interval = TimeTools.parsePeriodStringToMillis(interval);
         this.initialDelay = TimeTools.parsePeriodStringToMillis(initialDelay);
-        this.repeats = repeats - 1;
+        this.repeats = repeats!=-1?repeats-1:repeats;
         type = TYPE.INTERVAL;
         return this;
     }
@@ -68,7 +68,7 @@ public class DelayBlock extends AbstractBlock {
     @Override
     public boolean start() {
         if (clean) {
-            Logger.info("First wait for "+TimeTools.convertPeriodToString(initialDelay,TimeUnit.MILLISECONDS));
+            Logger.debug("First wait for "+TimeTools.convertPeriodToString(initialDelay,TimeUnit.MILLISECONDS));
             firstRun();
         } else if (retrigger != RETRIGGER.IGNORE) {
             cancelIfRunning(retrigger == RETRIGGER.RESTART);
@@ -117,7 +117,7 @@ public class DelayBlock extends AbstractBlock {
             Logger.info(id() + " -> Task is canceled or future is null, exiting...");
             return false;  // Exit early if the task is canceled or future is null
         }
-        Logger.info(id() + " -> Doing next task with "+reps+" reps left. (-1=infinite)");
+        Logger.debug(id() + " -> Doing next task with "+reps+" reps left. (-1=infinite)");
         switch (reps) {
             case -1 -> super.doNext(); // -1 means endless
             case 0 -> { // Last rep done, take the detour

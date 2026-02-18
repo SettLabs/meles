@@ -139,7 +139,6 @@ public class Meles implements Commandable{
         digForFileMonitor(digger);  // Add Filemonitor
         digForMatrix( digger );     // Add matrix
         addMqttPool();              // Add MQTT
-        addTaskManagerPool();       // Add Taskmanagers
         digForRawWorker();          // Add rawworker
 
         /* Regular check if the system clock was changed */

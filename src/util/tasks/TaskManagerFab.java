@@ -228,7 +228,7 @@ public class TaskManagerFab {
 
         AbstractBlock block;
         if (task.attr("interval", "").isEmpty()) { // If not an interval, not many repeats so don't use writable
-            block = new CmdBlock(Datagram.system(target[1], content));
+            block = new CmdBlock(Datagram.system("ss", target[1]+",send,"+content));
         } else {
             block = new WritableBlock(target[0] + ":" + target[1], content);
         }

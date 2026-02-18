@@ -37,7 +37,7 @@ public class OriginBlock extends AbstractBlock {
         reset();
         runs++;
         clean = false;
-        Logger.info(id + " -> Starting...");
+        Logger.debug(id + " -> Starting...");
         doNext();
         return true;
     }

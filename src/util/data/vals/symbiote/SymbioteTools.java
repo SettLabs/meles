@@ -2,11 +2,12 @@ package util.data.vals.symbiote;
 
 import org.tinylog.Logger;
 import util.data.vals.RealVal;
+import util.data.vals.Rtvals;
 
 import java.util.concurrent.ConcurrentHashMap;
 
 public class SymbioteTools {
-    public RealValSymbiote upgradeToRealSymbiote(ConcurrentHashMap<String, RealVal> hm, RealVal iv ){
+   /* public static RealValSymbiote upgradeToRealSymbiote(Rtvals rtv, RealVal iv ){
         var reg = hm.get(iv.id());
         RealValSymbiote rvs;
         if( iv instanceof RealValSymbiote sym ){
@@ -26,5 +27,5 @@ public class SymbioteTools {
         }
         applyUser(rvs,true);
         return rvs;
-    }
+    }*/
 }

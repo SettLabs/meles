@@ -23,7 +23,7 @@ public class CmdBlock extends AbstractBlock implements Writable {
     public String type(){ return "CommandBlock";}
     @Override
     public boolean writeLine(String origin, String data) {
-        Logger.info(id() + "-> " + d.getData() + " => Reply: " + data);
+        Logger.debug(id() + "-> " + d.getData() + " => Reply: " + data);
         if (data.startsWith("!")) {
             doAltRoute(true);
         } else {

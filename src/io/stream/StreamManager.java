@@ -789,7 +789,7 @@ public class StreamManager implements StreamListener, CollectorFuture, Commandab
 
 		dig.hasPeek("stream","id",cmds[0]);
 		if( !dig.hasValidPeek())
-			return "! No such stream yet.";
+			return "! No such stream yet "+cmds[0];
 		dig.digDown("stream","id",cmds[0]);
 		var type = dig.attr("type","");
 		var fabOpt = XMLfab.alterDigger(dig);
@@ -850,10 +850,10 @@ public class StreamManager implements StreamListener, CollectorFuture, Commandab
 	private String doSendCmd(String[] cmds) {
 		if (cmds.length < 3)
 			return "! Not enough arguments given: ss:id,send,data";
-		String written = writeToStream(cmds[1], cmds[2], cmds.length > 3 ? cmds[3] : "");
+		String written = writeToStream(cmds[0], cmds[2], cmds.length > 3 ? cmds[3] : "");
 		if (written.isEmpty())
-			return "! Failed to write data";
-		return "Data written: " + written;
+			return "! Failed to write data to "+cmds[0];
+		return "Data written to "+cmds[0]+": " + written;
 	}
 
 	private static String doLabelCmd(String[] cmds, XMLfab fab, BaseStream stream) {
