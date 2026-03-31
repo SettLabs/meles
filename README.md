@@ -1,5 +1,6 @@
 Meles
 =========
+>Note: No longer active here, moved to https://codeberg.org/SettLabs/meles
 
 *Like its namesake, Meles works relentlessly in the background, not just digging and storing, 
 but actively routing, transforming, and automating your data flows so Grafana can shine.*
